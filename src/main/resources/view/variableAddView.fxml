@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="309.0" prefWidth="247.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.VariableAddViewController">
+   <children>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label text="Введите имя переменной" />
+            <TextField fx:id="textName" maxWidth="150.0" minWidth="114.0" prefHeight="25.0" prefWidth="114.0" />
+            <HBox alignment="CENTER" prefHeight="27.0" prefWidth="247.0">
+               <children>
+                  <ComboBox fx:id="comboBox" prefWidth="150.0" />
+                  <Button fx:id="buttonDomains" mnemonicParsing="false" text="..." />
+               </children>
+            </HBox>
+            <CheckBox fx:id="checkWithdrawn" mnemonicParsing="false" text="выводимая" />
+            <CheckBox fx:id="checkRequested" mnemonicParsing="false" text="запрашиваемая" />
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="247.0" spacing="14.0">
+               <children>
+                  <Button fx:id="buttonAdd" mnemonicParsing="false" text="Сохранить" />
+                  <Button fx:id="buttonCancel" mnemonicParsing="false" text="Отмена" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
