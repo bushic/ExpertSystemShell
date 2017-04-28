@@ -18,6 +18,7 @@
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="14.0">
                <children>
                   <Button fx:id="buttonAdd" mnemonicParsing="false" text="Добавить" />
+                  <Button fx:id="buttonAddMore" mnemonicParsing="false" text="Добавить еще" />
                   <Button fx:id="buttonCancel" mnemonicParsing="false" text="Отмена" />
                </children>
             </HBox>

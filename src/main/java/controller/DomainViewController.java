@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.collections.FXCollections;
+import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,6 +10,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -57,8 +60,15 @@ public class DomainViewController implements Initializable {
             }
             valueListView.setItems(FXCollections.observableList(selectedDomain.getValues()));
         });
+
         domainAdd.setOnAction(event->{
             openDomainAddView("","domain");
+        });
+
+        domainAdd.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                openDomainAddView("","domain");
+            }
         });
 
         domainEdit.setOnAction(event -> {
@@ -69,11 +79,31 @@ public class DomainViewController implements Initializable {
             openDomainAddView(par,"domain");
         });
 
+        domainEdit.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                String par = "";
+                Domain selectedDomain = domainListView.getSelectionModel().getSelectedItem();
+                if (selectedDomain != null)
+                    par = selectedDomain.getName();
+                openDomainAddView(par,"domain");
+            }
+        });
+
         domainDelete.setOnAction(event->{
             Domain selectedDomain = domainListView.getSelectionModel().getSelectedItem();
             if (selectedDomain != null) {
                 domainListView.getItems().remove(selectedDomain);
                 mainApp.deleteDomain(selectedDomain);
+            }
+        });
+
+        domainDelete.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                Domain selectedDomain = domainListView.getSelectionModel().getSelectedItem();
+                if (selectedDomain != null) {
+                    domainListView.getItems().remove(selectedDomain);
+                    mainApp.deleteDomain(selectedDomain);
+                }
             }
         });
 
@@ -85,12 +115,32 @@ public class DomainViewController implements Initializable {
             openDomainAddView("","value");
         });
 
+        domainValueAdd.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                if (domainListView.getSelectionModel().getSelectedItem() == null){
+                    new Alert(Alert.AlertType.INFORMATION,"Выберите домен").showAndWait();
+                    return;
+                }
+                openDomainAddView("","value");
+            }
+        });
+
         domainValueEdit.setOnAction(event -> {
             String par = "";
             String selectedValue = valueListView.getSelectionModel().getSelectedItem();
             if (selectedValue != null)
                 par = selectedValue;
             openDomainAddView(par,"value");
+        });
+
+        domainValueEdit.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                String par = "";
+                String selectedValue = valueListView.getSelectionModel().getSelectedItem();
+                if (selectedValue != null)
+                    par = selectedValue;
+                openDomainAddView(par,"value");
+            }
         });
 
         domainValueDelete.setOnAction(event->{
@@ -102,8 +152,20 @@ public class DomainViewController implements Initializable {
             }
         });
 
+        domainValueDelete.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                String selectedValue = valueListView.getSelectionModel().getSelectedItem();
+                int selectedDomain = domainListView.getSelectionModel().getSelectedIndex();
+                if (selectedValue != null && selectedDomain > -1) {
+                    valueListView.getItems().remove(selectedValue);
+                    mainApp.deleteDomainValue(selectedDomain, selectedValue);
+                }
+            }
+        });
+
         if (mainApp != null)
             setItems(mainApp.domains);
+        domainAdd.requestFocus();
     }
 
     public void openDomainAddView(String parName,String parType){
@@ -136,6 +198,8 @@ public class DomainViewController implements Initializable {
             throw new Exception("Домен с таким именем существует");
         domainListView.getItems().add(domain);
         domainListView.getSelectionModel().select(domain);
+        valueListView.setItems(FXCollections.observableList(domain.getValues()));
+        domainValueAdd.requestFocus();
         mainApp.setBaseSaved(false);
         //mainApp.addDomain(domain);
     }
@@ -149,8 +213,12 @@ public class DomainViewController implements Initializable {
         return false;
     }
 
-    public void editDomain(Domain domain){
+    public void editDomain(Domain domain) throws Exception {
         int selectedDomain = domainListView.getSelectionModel().getSelectedIndex();
+        if (isDomainExist(domain,mainApp.domains) &&
+                !mainApp.domains.get(selectedDomain).getName().equals(domain.getName()))
+            throw new Exception("Домен с таким именем существует");
+
         if (domain != null) {
             mainApp.editDomain(selectedDomain, domain.getName());
             domainListView.getItems().set(selectedDomain,domain);
@@ -178,8 +246,12 @@ public class DomainViewController implements Initializable {
         return false;
     }
 
-    public void editDomainValue(String value){
-        int selectedValue = domainListView.getSelectionModel().getSelectedIndex();
+    public void editDomainValue(String value) throws Exception {
+        int selectedValue = valueListView.getSelectionModel().getSelectedIndex();
+        if (isDomainValueExist(domainListView.getSelectionModel().getSelectedItem(),value) &&
+                !value.equals(valueListView.getSelectionModel().getSelectedItem()))
+            throw new Exception("Такое значение домена существует");
+
         int selectedDomain = domainListView.getSelectionModel().getSelectedIndex();
         if (value != null && selectedValue>-1 && selectedDomain>-1) {
             mainApp.editDomainValue(selectedDomain, selectedValue, value);

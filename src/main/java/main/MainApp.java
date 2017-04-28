@@ -264,7 +264,7 @@ public class MainApp extends Application{
             if (ruleViewController != null){
                 ruleViewController.setItems(knowledgeBase.getRules());
             }
-            primaryStage.setTitle(filename);
+            primaryStage.setTitle("Оболочка (" + filename + ")");
 
             isBaseSaved = true;
         } catch (FileNotFoundException e) {
@@ -288,7 +288,7 @@ public class MainApp extends Application{
             return;
         }
         saveToFile(filename);
-        primaryStage.setTitle(filename);
+        primaryStage.setTitle("Оболочка (" + filename + ")");
         isBaseSaved = true;
     }
 
@@ -311,11 +311,12 @@ public class MainApp extends Application{
     public void saveKnowledgeBaseAs(){
         String filename = showFileDialogForSave();
         saveToFile(filename);
-        primaryStage.setTitle(filename);
+        primaryStage.setTitle("Оболочка (" + filename + ")");
     }
 
     public void saveToFile(String filename){
         if (filename.equals("")){
+            isBaseSaved = false;
             return;
         }
 
@@ -331,8 +332,6 @@ public class MainApp extends Application{
             oos.writeObject(knowledgeBase);
             oos.flush();
             oos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -2,10 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import model.Domain;
@@ -23,6 +20,8 @@ public class DomainAddViewController implements Initializable {
     @FXML
     private Button buttonAdd;
     @FXML
+    private Button buttonAddMore;
+    @FXML
     private Button buttonCancel;
     @FXML
     private TextField textName;
@@ -37,11 +36,28 @@ public class DomainAddViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         buttonAdd.setOnAction(event->{
             doAdd();
+            dialogStage.close();
         });
         buttonCancel.setOnAction(event->dialogStage.close());
         textName.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER){
                 doAdd();
+                textName.selectAll();
+            }
+        });
+        buttonCancel.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                dialogStage.close();
+            }
+        });
+        buttonAddMore.setOnAction(event -> {
+            doAdd();
+            textName.requestFocus();
+        });
+        buttonAddMore.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                doAdd();
+                textName.requestFocus();
             }
         });
     }
@@ -49,6 +65,11 @@ public class DomainAddViewController implements Initializable {
     private void doAdd() {
         Domain domain = new Domain();
         domain.setName(textName.getText().trim());
+        if (domain.getName().equals("")){
+            new Alert(Alert.AlertType.CONFIRMATION,"Повторите ввод", ButtonType.OK).showAndWait();
+            textName.requestFocus();
+            return;
+        }
         if (parName.equals("") && parType.equals("domain"))
             try {
                 domainViewController.addDomain(domain);
@@ -58,7 +79,13 @@ public class DomainAddViewController implements Initializable {
                 return;
             }
         else if (!parName.equals("") && parType.equals("domain"))
-            domainViewController.editDomain(domain);
+            try {
+                domainViewController.editDomain(domain);
+            } catch (Exception e) {
+                new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
+                textName.requestFocus();
+                return;
+            }
         else if (parName.equals(""))
             try {
                 domainViewController.addDomainValue(textName.getText().trim());
@@ -68,8 +95,13 @@ public class DomainAddViewController implements Initializable {
                 return;
             }
         else if (!parName.equals(""))
-            domainViewController.editDomainValue(textName.getText().trim());
-        dialogStage.close();
+            try {
+                domainViewController.editDomainValue(textName.getText().trim());
+            } catch (Exception e) {
+                new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
+                textName.requestFocus();
+                return;
+            }
     }
 
     public DomainViewController getDomainViewController() {

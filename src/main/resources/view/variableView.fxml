@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -18,6 +19,31 @@
             <ListView fx:id="variableListView" prefHeight="355.0" prefWidth="339.0" HBox.hgrow="ALWAYS" />
             <VBox alignment="CENTER" prefHeight="355.0" prefWidth="236.0" spacing="14.0">
                <children>
+                  <VBox spacing="14.0">
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label text="Имя переменной:  " />
+                              <Label fx:id="labelName" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="Домен переменной:  " />
+                              <Label fx:id="labelDomain" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="Тип переменной:  " />
+                              <Label fx:id="labelType" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="80.0" />
+                     </padding>
+                  </VBox>
                   <Button fx:id="variableAdd" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Добавить" />
                   <Button fx:id="variableEdit" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Изменить" />
                   <Button fx:id="variableDelete" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Удалить" />

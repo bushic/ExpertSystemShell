@@ -47,13 +47,23 @@ public class VariableAddViewController implements Initializable {
         buttonDomains.setOnAction(event -> {
             mainApp.showDomainView(dialogStage);
             comboBox.setItems(FXCollections.observableList(mainApp.domains));
-            comboBox.getSelectionModel().selectFirst();
+            comboBox.getSelectionModel().selectLast();
         });
 
         buttonAdd.setOnAction(event -> {
             doAdd();
         });
+        buttonAdd.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                doAdd();
+            }
+        });
         buttonCancel.setOnAction(event->dialogStage.close());
+        buttonCancel.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                dialogStage.close();
+            }
+        });
         textName.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER){
                 doAdd();
@@ -63,16 +73,27 @@ public class VariableAddViewController implements Initializable {
 
     private void doAdd() {
 
-        if (!checkRequested.isSelected() && !checkWithdrawn.isSelected()) {
-            new Alert(Alert.AlertType.INFORMATION, "Укажите тип переменной").showAndWait();
-            return;
-        }
-
         Variable variable = new Variable();
         variable.setDomain(comboBox.getSelectionModel().getSelectedItem());
         variable.setName(textName.getText().trim());
         variable.setRequested(checkRequested.isSelected());
         variable.setWithdrawn(checkWithdrawn.isSelected());
+
+        if (variable.getName().equals("")){
+            new Alert(Alert.AlertType.INFORMATION, "Введите непустое имя",ButtonType.OK).showAndWait();
+            textName.requestFocus();
+            return;
+        }
+        if (variable.getDomain() == null){
+            new Alert(Alert.AlertType.INFORMATION, "Укажите домен",ButtonType.OK).showAndWait();
+            comboBox.requestFocus();
+            return;
+        }
+        if (!variable.isRequested() && !variable.isWithdrawn()) {
+            new Alert(Alert.AlertType.INFORMATION, "Укажите тип переменной",ButtonType.OK).showAndWait();
+            checkWithdrawn.requestFocus();
+            return;
+        }
 
         if (parVariable == null)
             try {
@@ -80,9 +101,17 @@ public class VariableAddViewController implements Initializable {
             } catch (Exception e) {
                 new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 textName.requestFocus();
+                textName.selectAll();
                 return;
             }
-        else variableViewController.editVariable(variable);
+        else try {
+            variableViewController.editVariable(variable);
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
+            textName.requestFocus();
+            textName.selectAll();
+            return;
+        }
         dialogStage.close();
     }
 

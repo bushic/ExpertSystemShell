@@ -60,12 +60,12 @@ public class ConditionAddViewConroller implements Initializable {
         variableEdit.setOnAction(event -> {
             mainApp.showVariableView(dialogStage);
             variableComboBox.setItems(FXCollections.observableArrayList(mainApp.variables));
-            variableComboBox.getSelectionModel().selectFirst();
+            variableComboBox.getSelectionModel().selectLast();
         });
         valueEdit.setOnAction(event -> {
             mainApp.showDomainView(dialogStage);
             variableComboBox.setItems(FXCollections.observableArrayList(mainApp.variables));
-            variableComboBox.getSelectionModel().selectFirst();
+            variableComboBox.getSelectionModel().selectLast();
         });
     }
 
@@ -83,7 +83,16 @@ public class ConditionAddViewConroller implements Initializable {
 
     public void setPar(ArrayList<Variable> parVariables, String par){
         if (parVariables != null && parVariables.size() != 0){
-            variableComboBox.setItems(FXCollections.observableArrayList(parVariables));
+            if (par.equals("condition")){
+                variableComboBox.setItems(FXCollections.observableArrayList(parVariables));
+            }else{
+                for (int i = 0; i < parVariables.size(); i++){
+                    if (!parVariables.get(i).isRequested()){
+                        variableComboBox.getItems().add(parVariables.get(i));
+                    }
+                }
+            }
+
             variableComboBox.getSelectionModel().selectFirst();
             valueComboBox.setItems(FXCollections.observableArrayList(parVariables.get(0).getDomain().getValues()));
             valueComboBox.getSelectionModel().selectFirst();

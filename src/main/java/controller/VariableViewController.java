@@ -6,8 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -27,6 +29,12 @@ public class VariableViewController implements Initializable {
     @FXML
     private ListView<Variable> variableListView;
     @FXML
+    private Label labelName;
+    @FXML
+    private Label labelDomain;
+    @FXML
+    private Label labelType;
+    @FXML
     private Button variableAdd;
     @FXML
     private Button variableEdit;
@@ -38,8 +46,29 @@ public class VariableViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        variableListView.setOnMouseClicked(event -> {
+            Variable selectedVariable = variableListView.getSelectionModel().getSelectedItem();
+            if (selectedVariable != null) {
+                labelName.setText(selectedVariable.getName());
+                labelDomain.setText(selectedVariable.getDomain().toString());
+                if (selectedVariable.isRequested() && selectedVariable.isWithdrawn()){
+                    labelType.setText("Выводимо-запрашиваемая");
+                } else if (selectedVariable.isRequested()){
+                    labelType.setText("Запрашиваемая");
+                }else if (selectedVariable.isWithdrawn()){
+                    labelType.setText("Выводимая");
+                }
+            }
+        });
+
         variableAdd.setOnAction(event->{
             openVariableAddView(null);
+        });
+
+        variableAdd.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                openVariableAddView(null);
+            }
         });
 
         variableEdit.setOnAction(event -> {
@@ -47,16 +76,58 @@ public class VariableViewController implements Initializable {
             openVariableAddView(selectedVariable);
         });
 
+        variableEdit.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                Variable selectedVariable = variableListView.getSelectionModel().getSelectedItem();
+                openVariableAddView(selectedVariable);
+            }
+        });
+
         variableDelete.setOnAction(event->{
             Variable selectedVariable = variableListView.getSelectionModel().getSelectedItem();
             if (selectedVariable != null) {
                 variableListView.getItems().remove(selectedVariable);
                 mainApp.deleteVariable(selectedVariable);
+                Variable selectedItem = variableListView.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    labelName.setText(selectedItem.getName());
+                    labelDomain.setText(selectedItem.getDomain().toString());
+                    if (selectedItem.isRequested() && selectedItem.isWithdrawn()){
+                        labelType.setText("Выводимо-запрашиваемая");
+                    } else if (selectedItem.isRequested()){
+                        labelType.setText("Запрашиваемая");
+                    }else if (selectedItem.isWithdrawn()){
+                        labelType.setText("Выводимая");
+                    }
+                }
+            }
+        });
+
+        variableDelete.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                Variable selectedVariable = variableListView.getSelectionModel().getSelectedItem();
+                if (selectedVariable != null) {
+                    variableListView.getItems().remove(selectedVariable);
+                    mainApp.deleteVariable(selectedVariable);
+                    Variable selectedItem = variableListView.getSelectionModel().getSelectedItem();
+                    if (selectedItem != null) {
+                        labelName.setText(selectedItem.getName());
+                        labelDomain.setText(selectedItem.getDomain().toString());
+                        if (selectedItem.isRequested() && selectedItem.isWithdrawn()){
+                            labelType.setText("Выводимо-запрашиваемая");
+                        } else if (selectedItem.isRequested()){
+                            labelType.setText("Запрашиваемая");
+                        }else if (selectedItem.isWithdrawn()){
+                            labelType.setText("Выводимая");
+                        }
+                    }
+                }
             }
         });
 
         if (mainApp != null)
             setItems(mainApp.variables);
+        variableAdd.requestFocus();
     }
 
     private void openVariableAddView(Variable variable) {
@@ -107,6 +178,18 @@ public class VariableViewController implements Initializable {
         }
         variableListView.getItems().add(variable);
         variableListView.getSelectionModel().select(variable);
+        Variable selectedVariable = variableListView.getSelectionModel().getSelectedItem();
+        if (selectedVariable != null) {
+            labelName.setText(selectedVariable.getName());
+            labelDomain.setText(selectedVariable.getDomain().toString());
+            if (selectedVariable.isRequested() && selectedVariable.isWithdrawn()){
+                labelType.setText("Выводимо-запрашиваемая");
+            } else if (selectedVariable.isRequested()){
+                labelType.setText("Запрашиваемая");
+            }else if (selectedVariable.isWithdrawn()){
+                labelType.setText("Выводимая");
+            }
+        }
         mainApp.setBaseSaved(false);
     }
 
@@ -119,11 +202,28 @@ public class VariableViewController implements Initializable {
         return false;
     }
 
-    public void editVariable(Variable variable) {
+    public void editVariable(Variable variable) throws Exception {
         int selectedVariable = variableListView.getSelectionModel().getSelectedIndex();
+        if (isVariableExist(variable,mainApp.variables) &&
+                !mainApp.variables.get(selectedVariable).getName().equals(variable.getName())){
+            throw new Exception("Переменная с таким именем уже существует");
+        }
+
         if (variable != null) {
             mainApp.editVariable(selectedVariable, variable);
             variableListView.getItems().set(selectedVariable,variable);
+            Variable selectedItem = variableListView.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                labelName.setText(selectedItem.getName());
+                labelDomain.setText(selectedItem.getDomain().toString());
+                if (selectedItem.isRequested() && selectedItem.isWithdrawn()){
+                    labelType.setText("Выводимо-запрашиваемая");
+                } else if (selectedItem.isRequested()){
+                    labelType.setText("Запрашиваемая");
+                }else if (selectedItem.isWithdrawn()){
+                    labelType.setText("Выводимая");
+                }
+            }
             mainApp.setBaseSaved(false);
         }
     }

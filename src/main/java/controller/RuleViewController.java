@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -134,6 +136,46 @@ public class RuleViewController implements Initializable {
         valueTableColumn.setCellValueFactory(new PropertyValueFactory<Condition, String>("value"));
         variableConclusionTableColumn.setCellValueFactory(new PropertyValueFactory<Condition, Variable>("variable"));
         valueConclusionTableColumn.setCellValueFactory(new PropertyValueFactory<Condition, String>("value"));
+
+        DataFormat dataFormat = new DataFormat("Rule");
+        //Drag and Drop
+        ruleListView.setOnDragDetected(event -> {
+            Dragboard db = ruleListView.startDragAndDrop(TransferMode.ANY);
+
+            ClipboardContent content = new ClipboardContent();
+            content.put(dataFormat,ruleListView.getSelectionModel().getSelectedItem());
+            db.setContent(content);
+
+            event.consume();
+        });
+        ruleListView.setOnDragOver(event -> {
+
+            if (event.getDragboard().hasContent(dataFormat)) {
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+
+            event.consume();
+        });
+        ruleListView.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasContent(dataFormat)) {
+                ruleListView.getItems().add((Rule) db.getContent(dataFormat));
+                
+                success = true;
+            }
+
+            event.setDropCompleted(success);
+
+            event.consume();
+        });
+        ruleListView.setOnDragDone(event -> {
+
+            if (event.getTransferMode() == TransferMode.MOVE) {
+                ruleListView.getItems().remove(ruleListView.getSelectionModel().getSelectedItem());
+            }
+            event.consume();
+        });
     }
 
     private void saveQuestion() {
