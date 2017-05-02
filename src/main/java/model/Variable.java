@@ -12,6 +12,7 @@ public class Variable implements Serializable {
     private Domain domain;
     private boolean requested;
     private boolean withdrawn;
+    private String question;
 
     public int getId() {
         return id;
@@ -65,5 +66,13 @@ public class Variable implements Serializable {
 
     public String toString(){
         return name;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
     }
 }

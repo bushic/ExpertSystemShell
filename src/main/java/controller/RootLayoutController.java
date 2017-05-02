@@ -1,14 +1,11 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import main.MainApp;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -25,6 +22,10 @@ public class RootLayoutController implements Initializable {
     private MenuItem menuKPZVariable;
     @FXML
     private MenuItem menuKPZRule;
+    @FXML
+    private MenuItem menuMLV;
+    @FXML
+    private MenuItem menuKO;
     @FXML
     private MenuItem menuFileSave;
     @FXML
@@ -64,6 +65,9 @@ public class RootLayoutController implements Initializable {
         menuFileNew.setOnAction(event -> {
             mainApp.saveQuestion();
             mainApp.newKnowledgeBase();
+        });
+        menuMLV.setOnAction(event -> {
+            mainApp.showChooseGoalView();
         });
     }
 

@@ -17,15 +17,21 @@
                   <MenuItem fx:id="menuFileExit" mnemonicParsing="false" text="Выход" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="КПЗ">
+          <Menu mnemonicParsing="false" text="Приобретение знаний">
             <items>
               <MenuItem fx:id="menuKPZDomain" mnemonicParsing="false" text="Домены" />
                   <MenuItem fx:id="menuKPZVariable" mnemonicParsing="false" text="Переменные" />
                   <MenuItem fx:id="menuKPZRule" mnemonicParsing="false" text="Правила" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="МЛВ" />
-            <Menu mnemonicParsing="false" text="КО" />
+          <Menu mnemonicParsing="false" text="Консультация">
+               <items>
+                  <MenuItem fx:id="menuMLV" mnemonicParsing="false" text="Начать" />
+               </items></Menu>
+            <Menu mnemonicParsing="false" text="Результат">
+               <items>
+                  <MenuItem fx:id="menuKO" mnemonicParsing="false" text="Получить" />
+               </items></Menu>
         </menus>
       </MenuBar>
    </top>

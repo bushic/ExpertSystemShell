@@ -149,6 +149,7 @@ public class DomainViewController implements Initializable {
             if (selectedValue != null && selectedDomain > -1) {
                 valueListView.getItems().remove(selectedValue);
                 mainApp.deleteDomainValue(selectedDomain, selectedValue);
+                mainApp.setBaseSaved(false);
             }
         });
 
@@ -159,6 +160,7 @@ public class DomainViewController implements Initializable {
                 if (selectedValue != null && selectedDomain > -1) {
                     valueListView.getItems().remove(selectedValue);
                     mainApp.deleteDomainValue(selectedDomain, selectedValue);
+                    mainApp.setBaseSaved(false);
                 }
             }
         });

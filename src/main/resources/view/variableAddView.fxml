@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -20,6 +21,19 @@
             </HBox>
             <CheckBox fx:id="checkWithdrawn" mnemonicParsing="false" text="выводимая" />
             <CheckBox fx:id="checkRequested" mnemonicParsing="false" text="запрашиваемая" />
+            <HBox spacing="14.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="85.0" text="Вопрос" />
+                  <TextArea disable="true" fx:id="textQuestion" prefHeight="51.0" prefWidth="199.0">
+                     <VBox.margin>
+                        <Insets left="14.0" right="14.0" />
+                     </VBox.margin>
+                  </TextArea>
+               </children>
+               <VBox.margin>
+                  <Insets left="14.0" right="14.0" />
+               </VBox.margin>
+            </HBox>
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="247.0" spacing="14.0">
                <children>
                   <Button fx:id="buttonAdd" mnemonicParsing="false" text="Сохранить" />

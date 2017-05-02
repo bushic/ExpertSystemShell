@@ -35,6 +35,8 @@ public class VariableAddViewController implements Initializable {
     private TextField textName;
     @FXML
     private ComboBox<Domain> comboBox;
+    @FXML
+    private TextArea textQuestion;
 
     private VariableViewController variableViewController;
     private Stage dialogStage;
@@ -69,6 +71,11 @@ public class VariableAddViewController implements Initializable {
                 doAdd();
             }
         });
+        checkRequested.setOnAction(event -> {
+            if (checkRequested.isSelected()){
+                textQuestion.setDisable(false);
+            } else textQuestion.setDisable(true);
+        });
     }
 
     private void doAdd() {
@@ -78,6 +85,11 @@ public class VariableAddViewController implements Initializable {
         variable.setName(textName.getText().trim());
         variable.setRequested(checkRequested.isSelected());
         variable.setWithdrawn(checkWithdrawn.isSelected());
+        variable.setQuestion(textQuestion.getText().trim());
+
+        if (variable.getQuestion().equals("")){
+            variable.setQuestion(variable.getName() + "?");
+        }
 
         if (variable.getName().equals("")){
             new Alert(Alert.AlertType.INFORMATION, "Введите непустое имя",ButtonType.OK).showAndWait();

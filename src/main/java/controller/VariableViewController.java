@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -35,6 +36,8 @@ public class VariableViewController implements Initializable {
     @FXML
     private Label labelType;
     @FXML
+    private Label labelQuestion;
+    @FXML
     private Button variableAdd;
     @FXML
     private Button variableEdit;
@@ -58,6 +61,7 @@ public class VariableViewController implements Initializable {
                 }else if (selectedVariable.isWithdrawn()){
                     labelType.setText("Выводимая");
                 }
+                labelQuestion.setText(selectedVariable.getQuestion());
             }
         });
 
@@ -189,6 +193,7 @@ public class VariableViewController implements Initializable {
             }else if (selectedVariable.isWithdrawn()){
                 labelType.setText("Выводимая");
             }
+            labelQuestion.setText(selectedVariable.getQuestion());
         }
         mainApp.setBaseSaved(false);
     }
@@ -223,6 +228,7 @@ public class VariableViewController implements Initializable {
                 }else if (selectedItem.isWithdrawn()){
                     labelType.setText("Выводимая");
                 }
+                labelQuestion.setText(selectedItem.getQuestion());
             }
             mainApp.setBaseSaved(false);
         }

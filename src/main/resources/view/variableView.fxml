@@ -39,6 +39,16 @@
                               <Label fx:id="labelType" />
                            </children>
                         </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="Вопрос:  ">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <Label fx:id="labelQuestion" />
+                           </children>
+                        </HBox>
                      </children>
                      <padding>
                         <Insets bottom="80.0" />

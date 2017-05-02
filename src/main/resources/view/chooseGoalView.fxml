@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="118.0" prefWidth="337.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ChooseGoalViewController">
+   <children>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ComboBox fx:id="comboBox" prefWidth="150.0" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets bottom="14.0" top="24.0" />
+               </VBox.margin>
+            </ComboBox>
+            <HBox alignment="CENTER" prefHeight="49.0" prefWidth="469.0" spacing="14.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Button fx:id="buttonChoose" mnemonicParsing="false" text="Выбрать" />
+                  <Button fx:id="buttonCancel" mnemonicParsing="false" text="Отмена" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

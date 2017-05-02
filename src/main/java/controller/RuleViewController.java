@@ -1,24 +1,16 @@
 package controller;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import javafx.util.converter.DefaultStringConverter;
 import main.MainApp;
 import model.Condition;
 import model.Rule;
@@ -88,23 +80,27 @@ public class RuleViewController implements Initializable {
         buttonAddCondition.setOnAction(event -> {
             openConditionAddView("condition");
             isSaved = false;
+            mainApp.setBaseSaved(false);
         });
         buttonDeleteCondition.setOnAction(event -> {
             Condition selectedCondition = conditionTableView.getSelectionModel().getSelectedItem();
             if (selectedCondition != null) {
                 conditionTableView.getItems().remove(selectedCondition);
                 isSaved = false;
+                mainApp.setBaseSaved(false);
             }
         });
         buttonAddConclusion.setOnAction(event -> {
             openConditionAddView("conclusion");
             isSaved = false;
+            mainApp.setBaseSaved(false);
         });
         buttonDeleteConclusion.setOnAction(event -> {
             Condition selectedConclusion = conclusionTableView.getSelectionModel().getSelectedItem();
             if (selectedConclusion != null) {
                 conclusionTableView.getItems().remove(selectedConclusion);
                 isSaved = false;
+                mainApp.setBaseSaved(false);
             }
         });
         buttonAdd.setOnAction(event -> {
@@ -115,6 +111,7 @@ public class RuleViewController implements Initializable {
         });
         buttonSave.setOnAction(event -> {
             buttonSaveClick();
+            mainApp.setBaseSaved(false);
         });
         buttonDelete.setOnAction(event -> {
             Rule selectedRule = ruleListView.getSelectionModel().getSelectedItem();
@@ -123,6 +120,7 @@ public class RuleViewController implements Initializable {
                 mainApp.deleteRule(selectedRule);
                 ruleListView.getSelectionModel().clearSelection();
                 isSaved = true;
+                mainApp.setBaseSaved(false);
             }
 
         });
@@ -137,45 +135,8 @@ public class RuleViewController implements Initializable {
         variableConclusionTableColumn.setCellValueFactory(new PropertyValueFactory<Condition, Variable>("variable"));
         valueConclusionTableColumn.setCellValueFactory(new PropertyValueFactory<Condition, String>("value"));
 
-        DataFormat dataFormat = new DataFormat("Rule");
         //Drag and Drop
-        ruleListView.setOnDragDetected(event -> {
-            Dragboard db = ruleListView.startDragAndDrop(TransferMode.ANY);
 
-            ClipboardContent content = new ClipboardContent();
-            content.put(dataFormat,ruleListView.getSelectionModel().getSelectedItem());
-            db.setContent(content);
-
-            event.consume();
-        });
-        ruleListView.setOnDragOver(event -> {
-
-            if (event.getDragboard().hasContent(dataFormat)) {
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            }
-
-            event.consume();
-        });
-        ruleListView.setOnDragDropped(event -> {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.hasContent(dataFormat)) {
-                ruleListView.getItems().add((Rule) db.getContent(dataFormat));
-                
-                success = true;
-            }
-
-            event.setDropCompleted(success);
-
-            event.consume();
-        });
-        ruleListView.setOnDragDone(event -> {
-
-            if (event.getTransferMode() == TransferMode.MOVE) {
-                ruleListView.getItems().remove(ruleListView.getSelectionModel().getSelectedItem());
-            }
-            event.consume();
-        });
     }
 
     private void saveQuestion() {

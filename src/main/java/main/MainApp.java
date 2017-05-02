@@ -1,9 +1,6 @@
 package main;
 
-import controller.DomainViewController;
-import controller.RootLayoutController;
-import controller.RuleViewController;
-import controller.VariableViewController;
+import controller.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,7 +17,6 @@ import model.KnowledgeBase;
 import model.Rule;
 import model.Variable;
 
-import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -177,6 +173,31 @@ public class MainApp extends Application{
 
             rootLayout.setCenter(ruleView);
         }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void showChooseGoalView() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/chooseGoalView.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.getIcons().add(new Image(String.valueOf(getClass().getResource("/logo.png"))));
+            dialogStage.setTitle("Выберите цель консультации");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(getPrimaryStage());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            ChooseGoalViewController controller = loader.getController();
+            controller.setMainApp(this);
+            controller.setDialogStage(dialogStage);
+            controller.setItems(variables);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -396,4 +417,5 @@ public class MainApp extends Application{
             }
         }
     }
+
 }
