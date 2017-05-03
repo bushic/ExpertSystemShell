@@ -35,13 +35,12 @@ public class DomainAddViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         buttonAdd.setOnAction(event->{
-            doAdd();
-            dialogStage.close();
+            doAdd(true);
         });
         buttonCancel.setOnAction(event->dialogStage.close());
         textName.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER){
-                doAdd();
+                doAdd(false);
                 textName.selectAll();
             }
         });
@@ -51,18 +50,18 @@ public class DomainAddViewController implements Initializable {
             }
         });
         buttonAddMore.setOnAction(event -> {
-            doAdd();
+            doAdd(false);
             textName.requestFocus();
         });
         buttonAddMore.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER){
-                doAdd();
+                doAdd(false);
                 textName.requestFocus();
             }
         });
     }
 
-    private void doAdd() {
+    private void doAdd(boolean f) {
         Domain domain = new Domain();
         domain.setName(textName.getText().trim());
         if (domain.getName().equals("")){
@@ -102,6 +101,8 @@ public class DomainAddViewController implements Initializable {
                 textName.requestFocus();
                 return;
             }
+        if (f)
+            dialogStage.close();
     }
 
     public DomainViewController getDomainViewController() {
@@ -126,6 +127,7 @@ public class DomainAddViewController implements Initializable {
         textName.setText(parName);
         if (!parName.equals("")){
             buttonAdd.setText("Изменить");
+            buttonAddMore.setVisible(false);
         }
         if (parType.equals("domain")){
             labelText.setText("Введите имя домена");

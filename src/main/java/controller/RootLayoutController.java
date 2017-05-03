@@ -69,6 +69,9 @@ public class RootLayoutController implements Initializable {
         menuMLV.setOnAction(event -> {
             mainApp.showChooseGoalView();
         });
+        menuKO.setOnAction(event -> {
+            mainApp.showResultView();
+        });
     }
 
     public BorderPane getRootLayout() {

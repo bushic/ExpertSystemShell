@@ -32,6 +32,7 @@ public class Rule implements Serializable {
             s += conditions.get(i);
             s += " and ";
         }
+        s = s.substring(0,s.length()-4);
         s += "then ";
         for (int i=0; i<conclusions.size(); i++){
             s += conclusions.get(i);

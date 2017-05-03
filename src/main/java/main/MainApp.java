@@ -6,16 +6,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Domain;
-import model.KnowledgeBase;
-import model.Rule;
-import model.Variable;
+import model.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -46,6 +44,9 @@ public class MainApp extends Application{
     private AnchorPane variableView;
     private AnchorPane ruleView;
     private boolean isBaseSaved;
+    private ValueVariable goal;
+    public TreeItem<String> rootItemWork;
+    public TreeItem<String> rootItemFull;
 
     public static void main(String[] args) {
         launch(args);
@@ -195,6 +196,33 @@ public class MainApp extends Application{
             controller.setMainApp(this);
             controller.setDialogStage(dialogStage);
             controller.setItems(variables);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showResultView() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/resultView.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.getIcons().add(new Image(String.valueOf(getClass().getResource("/logo.png"))));
+            dialogStage.setTitle("Результат консультации");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(getPrimaryStage());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            ResultViewController controller = loader.getController();
+            controller.setMainApp(this);
+            controller.setDialogStage(dialogStage);
+            controller.setTreeViewWork(rootItemWork);
+            controller.setTreeViewFull(rootItemFull);
+            controller.setVariable(goal);
 
             dialogStage.showAndWait();
         } catch (IOException e) {
@@ -418,4 +446,7 @@ public class MainApp extends Application{
         }
     }
 
+    public void setGoal(ValueVariable goal) {
+        this.goal = goal;
+    }
 }

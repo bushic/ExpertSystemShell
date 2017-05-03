@@ -26,6 +26,11 @@ public class ChooseGoalViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        buttonChoose.setOnAction(event -> {
+            mainApp.getKnowledgeBase().consult(comboBox.getSelectionModel().getSelectedItem(),
+                    new ResultViewController(),mainApp);
+            dialogStage.close();
+        });
         buttonCancel.setOnAction(event -> dialogStage.close());
     }
 

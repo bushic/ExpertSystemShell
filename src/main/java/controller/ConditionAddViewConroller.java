@@ -94,7 +94,7 @@ public class ConditionAddViewConroller implements Initializable {
             }
 
             variableComboBox.getSelectionModel().selectFirst();
-            valueComboBox.setItems(FXCollections.observableArrayList(parVariables.get(0).getDomain().getValues()));
+            valueComboBox.setItems(FXCollections.observableArrayList(variableComboBox.getItems().get(0).getDomain().getValues()));
             valueComboBox.getSelectionModel().selectFirst();
         }
         this.par = par;

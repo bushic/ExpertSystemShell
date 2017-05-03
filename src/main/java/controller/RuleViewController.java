@@ -29,6 +29,8 @@ public class RuleViewController implements Initializable {
     @FXML
     private Button buttonAdd;
     @FXML
+    private Button buttonChange;
+    @FXML
     private Button buttonDelete;
     @FXML
     private Button buttonSave;
@@ -75,6 +77,7 @@ public class RuleViewController implements Initializable {
             conditionTableView.setItems(FXCollections.observableArrayList(selectedRule.getConditions()));
             conclusionTableView.setItems(FXCollections.observableArrayList(selectedRule.getConclusions()));
             isSaved = true;
+            setDisable(true);
         });
 
         buttonAddCondition.setOnAction(event -> {
@@ -108,10 +111,12 @@ public class RuleViewController implements Initializable {
             clearAll();
             ruleEdit = false;
             textName.requestFocus();
+            setDisable(false);
         });
         buttonSave.setOnAction(event -> {
             buttonSaveClick();
             mainApp.setBaseSaved(false);
+
         });
         buttonDelete.setOnAction(event -> {
             Rule selectedRule = ruleListView.getSelectionModel().getSelectedItem();
@@ -121,6 +126,7 @@ public class RuleViewController implements Initializable {
                 ruleListView.getSelectionModel().clearSelection();
                 isSaved = true;
                 mainApp.setBaseSaved(false);
+                setDisable(true);
             }
 
         });
@@ -135,8 +141,22 @@ public class RuleViewController implements Initializable {
         variableConclusionTableColumn.setCellValueFactory(new PropertyValueFactory<Condition, Variable>("variable"));
         valueConclusionTableColumn.setCellValueFactory(new PropertyValueFactory<Condition, String>("value"));
 
+        buttonChange.setOnAction(event -> {
+            setDisable(false);
+        });
+
         //Drag and Drop
 
+    }
+
+    private void setDisable(boolean f){
+        textName.setDisable(f);
+        buttonAddConclusion.setDisable(f);
+        buttonDeleteConclusion.setDisable(f);
+        buttonAddCondition.setDisable(f);
+        buttonDeleteCondition.setDisable(f);
+        buttonSave.setDisable(f);
+        textReason.setDisable(f);
     }
 
     private void saveQuestion() {
@@ -162,6 +182,11 @@ public class RuleViewController implements Initializable {
         Rule rule = new Rule();
         rule.setName(textName.getText().trim());
         rule.setReason(textReason.getText().trim());
+        if (rule.getConclusions().equals("")){
+            new Alert(Alert.AlertType.CONFIRMATION,"Введите имя",ButtonType.OK).showAndWait();
+            return;
+        }
+
         int n = conditionTableView.getItems().size();
         for (int i = 0; i < n; i++){
             rule.addCondition(conditionTableView.getItems().get(i));
@@ -177,7 +202,10 @@ public class RuleViewController implements Initializable {
             ruleEdit = textName.getText().toLowerCase().trim().equals(selectedRule.getName().toLowerCase());*/
         int existIndex = isRuleExist(rule,mainApp.rules);
         if (existIndex == -1){
-                ruleListView.getItems().add(rule);
+                int selectedIndex = ruleListView.getSelectionModel().getSelectedIndex();
+                if (selectedIndex != ruleListView.getItems().size() && selectedIndex != -1)
+                    ruleListView.getItems().add(selectedIndex + 1,rule);
+                else ruleListView.getItems().add(rule);
                 //ruleListView.getSelectionModel().select(rule);
                 mainApp.setBaseSaved(false);
                 isSaved = true;
@@ -190,7 +218,7 @@ public class RuleViewController implements Initializable {
         }else{
             new Alert(Alert.AlertType.INFORMATION,"Правило с таким именем уже существует").showAndWait();
         }
-
+        setDisable(true);
     }
 
     private void clearAll() {
