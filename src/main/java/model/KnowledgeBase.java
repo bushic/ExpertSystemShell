@@ -5,6 +5,8 @@ import controller.QuestionViewController;
 import controller.ResultViewController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -93,15 +95,22 @@ public class KnowledgeBase implements Serializable {
 
         goal(variable,rootItemWork,rootItemFull,mainApp);
 
-        ValueVariable lastValueVariable = variablesValue.get(variablesValue.size()-1);
-        if (variable.equals(lastValueVariable.getVariable()))
-            mainApp.setGoal(lastValueVariable);
-        else{
-            Variable helpVariable = new Variable();
-            helpVariable.setName(variable.getName());
-            lastValueVariable.setValue("");
-            lastValueVariable.setVariable(helpVariable);
-            mainApp.setGoal(lastValueVariable);
+        ValueVariable lastValueVariable;
+        int index = variablesValue.size()-1;
+        if (index >= 0) {
+            lastValueVariable = variablesValue.get(index);
+            if (variable.equals(lastValueVariable.getVariable()))
+                mainApp.setGoal(lastValueVariable);
+            else {
+                Variable helpVariable = new Variable();
+                helpVariable.setName(variable.getName());
+                lastValueVariable.setValue("");
+                lastValueVariable.setVariable(helpVariable);
+                mainApp.setGoal(lastValueVariable);
+            }
+        }else{
+            new Alert(Alert.AlertType.CONFIRMATION,"Нет правил для нахождений указанной переменной", ButtonType.OK).showAndWait();
+            return;
         }
 
         mainApp.rootItemFull = rootItemFull;

@@ -1,6 +1,8 @@
 package model;
 
-public class ValueVariable {
+import java.io.Serializable;
+
+public class ValueVariable implements Serializable {
 
     private Variable variable;
     private String value;

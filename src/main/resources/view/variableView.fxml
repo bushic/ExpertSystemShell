@@ -17,7 +17,7 @@
       <HBox layoutX="14.0" layoutY="31.0" prefHeight="347.0" prefWidth="563.0" spacing="14.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="31.0">
          <children>
             <ListView fx:id="variableListView" prefHeight="355.0" prefWidth="339.0" HBox.hgrow="ALWAYS" />
-            <VBox alignment="CENTER" prefHeight="355.0" prefWidth="236.0" spacing="14.0">
+            <VBox alignment="CENTER" prefHeight="355.0" prefWidth="236.0" spacing="14.0" HBox.hgrow="ALWAYS">
                <children>
                   <VBox spacing="14.0">
                      <children>

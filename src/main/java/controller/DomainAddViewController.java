@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import model.Domain;
+import model.Rule;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,6 +32,7 @@ public class DomainAddViewController implements Initializable {
     private Stage dialogStage;
     private String parName;
     private String parType;
+    private RuleViewController ruleViewController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -62,6 +64,30 @@ public class DomainAddViewController implements Initializable {
     }
 
     private void doAdd(boolean f) {
+
+        if (parType.equals("rule")){
+            String temp = textName.getText().trim();
+            if (temp.equals("")){
+                new Alert(Alert.AlertType.CONFIRMATION,"Введите непустое имя").showAndWait();
+                textName.selectAll();
+                textName.requestFocus();
+                return;
+            }
+            Rule rule = new Rule();
+            rule.setName(temp);
+            int existIndex = ruleViewController.isRuleExist(rule,ruleViewController.getMainApp().rules);
+            if (existIndex == -1)
+                ruleViewController.editName(temp);
+            else{
+                new Alert(Alert.AlertType.CONFIRMATION,"Правило с таким именем уже существует").showAndWait();
+                textName.selectAll();
+                textName.requestFocus();
+                return;
+            }
+            dialogStage.close();
+            return;
+        }
+
         Domain domain = new Domain();
         domain.setName(textName.getText().trim());
         if (domain.getName().equals("")){
@@ -125,14 +151,25 @@ public class DomainAddViewController implements Initializable {
         this.parName = parName;
         this.parType = parType;
         textName.setText(parName);
+
         if (!parName.equals("")){
             buttonAdd.setText("Изменить");
             buttonAddMore.setVisible(false);
+            textName.selectAll();
+            textName.requestFocus();
+        }
+        if(parType.equals("rule")){
+            labelText.setText("Введите новое имя правила");
+            return;
         }
         if (parType.equals("domain")){
             labelText.setText("Введите имя домена");
         }else{
             labelText.setText("Введите значение домена");
         }
+    }
+
+    public void setRuleViewController(RuleViewController ruleViewController) {
+        this.ruleViewController = ruleViewController;
     }
 }

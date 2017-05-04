@@ -62,6 +62,9 @@ public class VariableViewController implements Initializable {
                     labelType.setText("Выводимая");
                 }
                 labelQuestion.setText(selectedVariable.getQuestion());
+                if (!selectedVariable.isRequested()){
+                    labelQuestion.setText("");
+                }
             }
         });
 
@@ -193,7 +196,8 @@ public class VariableViewController implements Initializable {
             }else if (selectedVariable.isWithdrawn()){
                 labelType.setText("Выводимая");
             }
-            labelQuestion.setText(selectedVariable.getQuestion());
+            if (selectedVariable.isRequested())
+                labelQuestion.setText(selectedVariable.getQuestion());
         }
         mainApp.setBaseSaved(false);
     }
@@ -228,7 +232,8 @@ public class VariableViewController implements Initializable {
                 }else if (selectedItem.isWithdrawn()){
                     labelType.setText("Выводимая");
                 }
-                labelQuestion.setText(selectedItem.getQuestion());
+                if (selectedItem.isRequested())
+                    labelQuestion.setText(selectedItem.getQuestion());
             }
             mainApp.setBaseSaved(false);
         }

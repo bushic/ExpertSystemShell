@@ -148,6 +148,9 @@ public class VariableAddViewController implements Initializable {
             comboBox.getSelectionModel().select(parVariable.getDomain());
             checkRequested.setSelected(parVariable.isRequested());
             checkWithdrawn.setSelected(parVariable.isWithdrawn());
+            textQuestion.setDisable(false);
+            textQuestion.setText(parVariable.getQuestion());
+            textQuestion.setDisable(!parVariable.isRequested());
         }
 
     }

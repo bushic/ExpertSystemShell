@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,6 +15,7 @@ import javafx.stage.Stage;
 import main.MainApp;
 import model.Condition;
 import model.Rule;
+import model.RuleCell;
 import model.Variable;
 
 import java.io.IOException;
@@ -34,6 +36,8 @@ public class RuleViewController implements Initializable {
     private Button buttonDelete;
     @FXML
     private Button buttonSave;
+    @FXML
+    private Button buttonChangeName;
     @FXML
     private TextField textName;
     @FXML
@@ -66,7 +70,7 @@ public class RuleViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ruleListView.setOnMouseClicked(event -> {
-            ruleEdit = true;
+
             Rule selectedRule = ruleListView.getSelectionModel().getSelectedItem();
             if (selectedRule == null){
                 return;
@@ -78,6 +82,7 @@ public class RuleViewController implements Initializable {
             conclusionTableView.setItems(FXCollections.observableArrayList(selectedRule.getConclusions()));
             isSaved = true;
             setDisable(true);
+            setDisableName(true);
         });
 
         buttonAddCondition.setOnAction(event -> {
@@ -110,8 +115,9 @@ public class RuleViewController implements Initializable {
             saveQuestion();
             clearAll();
             ruleEdit = false;
-            textName.requestFocus();
             setDisable(false);
+            setDisableName(false);
+            textName.requestFocus();
         });
         buttonSave.setOnAction(event -> {
             buttonSaveClick();
@@ -127,6 +133,7 @@ public class RuleViewController implements Initializable {
                 isSaved = true;
                 mainApp.setBaseSaved(false);
                 setDisable(true);
+                setDisableName(true);
             }
 
         });
@@ -143,20 +150,55 @@ public class RuleViewController implements Initializable {
 
         buttonChange.setOnAction(event -> {
             setDisable(false);
+            ruleEdit = true;
+        });
+
+        buttonChangeName.setOnAction(event -> {
+            openChangeNameView(textName.getText().trim());
         });
 
         //Drag and Drop
+        ruleListView.setCellFactory(param -> new RuleCell());
+    }
 
+    private void openChangeNameView(String par) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/domainAddView.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.getIcons().add(new Image(String.valueOf(getClass().getResource("/logo.png"))));
+            dialogStage.setTitle("Редактирование");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(mainApp.getPrimaryStage());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            DomainAddViewController controller = loader.getController();
+            controller.setRuleViewController(this);
+            controller.setDialogStage(dialogStage);
+            controller.setPar(par, "rule");
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setDisableName(boolean f){
+        textName.setDisable(f);
     }
 
     private void setDisable(boolean f){
-        textName.setDisable(f);
+
         buttonAddConclusion.setDisable(f);
         buttonDeleteConclusion.setDisable(f);
         buttonAddCondition.setDisable(f);
         buttonDeleteCondition.setDisable(f);
         buttonSave.setDisable(f);
         textReason.setDisable(f);
+        buttonChangeName.setDisable(f);
     }
 
     private void saveQuestion() {
@@ -182,8 +224,9 @@ public class RuleViewController implements Initializable {
         Rule rule = new Rule();
         rule.setName(textName.getText().trim());
         rule.setReason(textReason.getText().trim());
-        if (rule.getConclusions().equals("")){
+        if (rule.getName().equals("")){
             new Alert(Alert.AlertType.CONFIRMATION,"Введите имя",ButtonType.OK).showAndWait();
+            textName.requestFocus();
             return;
         }
 
@@ -218,7 +261,9 @@ public class RuleViewController implements Initializable {
         }else{
             new Alert(Alert.AlertType.INFORMATION,"Правило с таким именем уже существует").showAndWait();
         }
+        ruleListView.getSelectionModel().select(rule);
         setDisable(true);
+        setDisableName(true);
     }
 
     private void clearAll() {
@@ -228,7 +273,7 @@ public class RuleViewController implements Initializable {
         conclusionTableView.getItems().clear();
     }
 
-    private int isRuleExist(Rule rule, ArrayList<Rule> rules) {
+    public int isRuleExist(Rule rule, ArrayList<Rule> rules) {
         for (int i = 0; i < rules.size(); i++){
             if (rules.get(i).getName().toLowerCase().equals(rule.getName().toLowerCase())){
                 return i;
@@ -289,5 +334,13 @@ public class RuleViewController implements Initializable {
     public void addConclusion(Condition condition) {
         conclusionTableView.getItems().add(condition);
         isSaved = false;
+    }
+
+    public void editName(String newName) {
+        textName.setText(newName);
+        int selectedRuleIndex = ruleListView.getSelectionModel().getSelectedIndex();
+        Rule selectedRule = ruleListView.getSelectionModel().getSelectedItem();
+        selectedRule.setName(newName);
+        ruleListView.getItems().set(selectedRuleIndex,selectedRule);
     }
 }

@@ -16,6 +16,8 @@ import java.util.ResourceBundle;
 public class ResultViewController implements Initializable{
 
     @FXML
+    private Label labelReason;
+    @FXML
     private Label labelResult;
     @FXML
     private ListView<String> listView;
@@ -105,6 +107,7 @@ public class ResultViewController implements Initializable{
 
     public void setVariable(ValueVariable variable) {
         labelResult.setText(variable.getVariable().getName() + " = " + variable.getValue());
+        //labelReason.setText(variable);
         ArrayList<ValueVariable> valueVariables = mainApp.getKnowledgeBase().getVariablesValue();
         for( int i = 0; i < valueVariables.size(); i++){
             listView.getItems().add(valueVariables.get(i).toString());

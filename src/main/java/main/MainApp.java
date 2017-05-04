@@ -205,6 +205,10 @@ public class MainApp extends Application{
 
     public void showResultView() {
         try {
+            if (goal == null){
+                new Alert(Alert.AlertType.CONFIRMATION,"Консультация еще не проводилась",ButtonType.OK).showAndWait();
+                return;
+            }
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/view/resultView.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
